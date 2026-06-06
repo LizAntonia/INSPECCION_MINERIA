@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<title>Historial de Inspecciones</title>
+
+<style>
+
+body{
+    font-family:Arial, sans-serif;
+    background:#f4f4f4;
+    padding:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+}
+
+th, td{
+    border:1px solid #ccc;
+    padding:10px;
+    text-align:left;
+}
+
+th{
+    background:#007bff;
+    color:white;
+}
+
+a{
+    text-decoration:none;
+}
+
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>Historial de Inspecciones</h1>
+
+<table>
+
+<tr>
+<th>ID</th>
+<th>OT</th>
+<th>Inspector</th>
+<th>Área</th>
+<th>PDF</th>
+</tr>
+
+{% for i in inspecciones %}
+<tr>
+
+<td>{{ i[0] }}</td>
+<td>{{ i[1] }}</td>
+<td>{{ i[2] }}</td>
+<td>{{ i[3] }}</td>
+
+<td>
+<a href="/pdf/{{ i[0] }}">
+📄 Descargar
+</a>
+</td>
+
+</tr>
+{% endfor %}
+
+</table>
+
+<br>
+
+<a href="/">← Volver al formulario</a>
+
+</div>
+
+</body>
+</html>

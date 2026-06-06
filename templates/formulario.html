@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Inspección Minera</title>
+
+<style>
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f4f4;
+    padding:20px;
+}
+
+.container{
+    max-width:1200px;
+    margin:auto;
+    background:white;
+    padding:20px;
+    border-radius:10px;
+}
+
+h1{
+    text-align:center;
+}
+
+.equipo{
+    border:1px solid #ccc;
+    padding:15px;
+    margin-top:15px;
+    border-radius:8px;
+    background:#fafafa;
+}
+
+input, select, textarea{
+    width:100%;
+    padding:8px;
+    margin-top:5px;
+    margin-bottom:10px;
+}
+
+button{
+    padding:10px 15px;
+    cursor:pointer;
+}
+
+.agregar{
+    background:#28a745;
+    color:white;
+    border:none;
+}
+
+.guardar{
+    background:#007bff;
+    color:white;
+    border:none;
+}
+</style>
+
+</head>
+<body>
+
+<div class="container">
+
+<h1>INSPECCIÓN MINERA</h1>
+
+<form action="/guardar" method="POST" enctype="multipart/form-data">
+
+<h3>Datos Generales</h3>
+
+<label>OT</label> <input type="text" name="ot" required>
+
+<label>Fecha de Inspección</label> <input type="date" name="fecha_inspeccion" required>
+
+<label>Inspector</label> <input type="text" name="inspector" required>
+
+<label>Área</label> <input type="text" name="area" required>
+
+<div id="equipos">
+
+<div class="equipo">
+
+<h3>Equipo</h3>
+
+<label>TAG</label> <input type="text" name="tag[]">
+
+<label>Nombre Equipo</label> <input type="text" name="nombre[]">
+
+<label>Estructura</label> <select name="estructura[]">
+
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Deformaciones</label> <select name="deformaciones[]">
+
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Corrosión Activa</label> <select name="corrosion[]">
+
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Desgaste Significativo</label> <select name="desgaste[]">
+
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Apernadura</label> <select name="apernadura[]">
+
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Soldadura</label> <select name="soldadura[]">
+
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+<label>Fugas de Material</label>
+<select name="fugas[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Filtraciones</label>
+<select name="filtraciones[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Acumulación de Material</label>
+<select name="acumulacion[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Reparaciones Anteriores Visibles</label>
+<select name="reparaciones[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Operatividad</label>
+<select name="operatividad[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Hallazgo</label>
+<textarea name="hallazgo[]"></textarea>
+
+<label>Equipo Relacionado</label>
+<input type="text" name="equipo_relacionado[]">
+
+<label>Ubicación</label>
+<input type="text" name="ubicacion[]">
+
+<label>Fotografía</label>
+<input type="file" name="foto_0" accept="image/*" multiple>
+
+</div>
+
+</div>
+
+<button type="button" class="agregar" onclick="agregarEquipo()">
+➕ Agregar Equipo
+</button>
+
+<hr>
+
+<h3>Recomendaciones Generales</h3>
+
+<label><input type="checkbox" name="recomendaciones" value="Cambio de componente"> Cambio de componente</label><br>
+
+<label><input type="checkbox" name="recomendaciones" value="Reapriete de pernos"> Reapriete de pernos</label><br>
+
+<label><input type="checkbox" name="recomendaciones" value="Lubricación"> Lubricación</label><br>
+
+<label><input type="checkbox" name="recomendaciones" value="Monitoreo"> Monitoreo</label><br>
+
+<label><input type="checkbox" name="recomendaciones" value="Detener equipo"> Detener equipo</label><br>
+
+<label><input type="checkbox" name="recomendaciones" value="Verificación de TAG"> Verificación de TAG</label><br>
+
+<label><input type="checkbox" name="recomendaciones" value="Inspección de filtraciones"> Inspección de filtraciones</label><br>
+
+<hr>
+
+<label>Detalles y Comentarios</label>
+<textarea name="detalles" rows="6"></textarea>
+
+<label>Firma Inspector</label>
+<input type="text" name="firma">
+<br><br>
+
+<button type="submit" class="guardar">
+💾 Guardar y Descargar PDF
+</button>
+
+</form>
+
+</div>
+
+<script>
+
+let contador = 1;
+
+function agregarEquipo(){
+
+const div = document.createElement("div");
+
+div.classList.add("equipo");
+
+div.innerHTML = `
+
+<h3>Equipo</h3>
+
+<label>TAG</label>
+<input type="text" name="tag[]">
+
+<label>Nombre Equipo</label>
+<input type="text" name="nombre[]">
+
+<label>Estructura</label>
+<select name="estructura[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Deformaciones</label>
+<select name="deformaciones[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Corrosión Activa</label>
+<select name="corrosion[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Desgaste Significativo</label>
+<select name="desgaste[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Apernadura</label>
+<select name="apernadura[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Soldadura</label>
+<select name="soldadura[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+<label>Fugas de Material</label>
+<select name="fugas[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Filtraciones</label>
+<select name="filtraciones[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Acumulación de Material</label>
+<select name="acumulacion[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Reparaciones Anteriores Visibles</label>
+<select name="reparaciones[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Operatividad</label>
+<select name="operatividad[]">
+<option>Si</option>
+<option>No</option>
+<option>N/A</option>
+</select>
+
+<label>Hallazgo</label>
+<textarea name="hallazgo[]"></textarea>
+
+<label>Equipo Relacionado</label>
+<input type="text" name="equipo_relacionado[]">
+
+<label>Ubicación</label>
+<input type="text" name="ubicacion[]">
+
+<label>Fotografía</label>
+<input type="file" name="foto_${contador}" accept="image/*" multiple>
+
+`;
+
+document.getElementById("equipos").appendChild(div);
+
+contador++;
+
+}
+
+</script>
+
+</body>
+</html>
