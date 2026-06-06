@@ -391,8 +391,13 @@ def pdf(id):
         pdf.drawString(50, y, f"Operatividad: {operatividad}")
         y -= 20
 
-        pdf.drawString(50, y, f"Hallazgo: {hallazgo}")
-        y -= 15
+        from textwrap import wrap
+
+        lineas_hallazgo = wrap(f"Hallazgo: {hallazgo}", width=80)
+
+        for linea in lineas_hallazgo:
+            pdf.drawString(50, y, linea)
+            y -= 15
 
         pdf.drawString(50, y, f"Equipo relacionado: {relacionado}")
         y -= 15
@@ -400,46 +405,41 @@ def pdf(id):
         pdf.drawString(50, y, f"Ubicación: {ubicacion}")
         y -= 20
 
-    if foto:
+ if foto:
 
-        try:
+    try:
 
-            lista_fotos = foto.split("|")
-            print("Fotos encontradas:", len(lista_fotos))
+        lista_fotos = foto.split("|")
 
-            x = 50
-            contador_fotos = 0
+        x = 50
+        fila_y = y
 
-            for ruta in lista_fotos:
+        for i_foto, ruta in enumerate(lista_fotos):
 
-                if os.path.exists(ruta):
+            if os.path.exists(ruta):
 
-                    imagen = ImageReader(ruta)
+                imagen = ImageReader(ruta)
 
-                    pdf.drawImage(
-                        imagen,
-                        x,
-                        y - 120,
-                        width=120,
-                        height=90,
-                        preserveAspectRatio=True
-                    )
+                pdf.drawImage(
+                    imagen,
+                    x,
+                    fila_y - 90,
+                    width=120,
+                    height=90,
+                    preserveAspectRatio=True
+                )
 
-                    contador_fotos += 1
+                if i_foto % 2 == 0:
+                    x = 200
+                else:
+                    x = 50
+                    fila_y -= 100
 
-                    if contador_fotos % 2 == 0:
-                        x = 50
-                        y -= 100
-                    else:
-                        x = 200
+        filas = (len(lista_fotos) + 1) // 2
+        y = fila_y - 20
 
-            if contador_fotos % 2 != 0:
-                y -= 100
-
-        except Exception as e:
-            print(e)
-
-        y -= 20
+    except Exception as e:
+        print(e)
 
     if y < 180:
         pdf.showPage()
